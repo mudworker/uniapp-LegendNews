@@ -1,0 +1,26 @@
+// scroll组件不显示滚动条
+@mixin noshowscroll {
+	/deep/ ::-webkit-scrollbar {
+		width: 4px !important;
+		height: 1px !important;
+		overflow: auto !important;
+		background: transparent !important;
+		-webkit-appearance: auto !important;
+		display: block;
+	}
+}
+
+// 保留$line行 超出部分省略
+@mixin ellipsis-line($line, $align: start) {
+	overflow: hidden;
+	-webkit-line-clamp: $line;
+	/* autoprefixer: off */
+	-webkit-box-orient: vertical;
+	text-overflow: ellipsis;
+	display: -webkit-box;
+	-webkit-box-pack: center;
+	//  center居中 start居左
+	-webkit-box-align: $align;
+	word-break: break-word;
+	/*! autoprefixer: on */
+}
