@@ -1,27 +1,51 @@
 <template>
-	<view class="newsbox">
-		<view class="pic">
-			<image src="../../static/images/0.jpg" mode="aspectFil"></image>
+	<view class="newsbox" @click="toDetail(item.id)">
+		<view class=" pic">
+		<image :src="item.picurl" mode="aspectFil"></image>
+	</view>
+	<view class="text">
+		<view class="title">
+			{{item.title}}
 		</view>
-		<view class="text">
-			<view class="title">
-				新闻标题恶趣味驱蚊器恶气恶气恶趣味请问请问
-			</view>
-			<view class="info">
-				<text>作者名称</text>
-				<text>998浏览</text>
-			</view>
+		<view class="info" v-if="!item.viewtime">
+			<text>{{item.author}}</text>
+			<text>{{item.hits}}浏览</text>
 		</view>
+
+		<view class="info" v-else>
+			<text>浏览时间：{{item.viewtime}}</text>
+		</view>
+	</view>
 	</view>
 </template>
 
 <script>
 	export default {
 		name: "newsbox",
+		props: {
+			item: {
+				type: Object,
+				default () {
+					return {
+						id: '',
+						title: '',
+						author: '',
+						hits: '',
+						picurl: '../../static/images/nopic.jpg',
+					}
+				}
+			}
+		},
 		data() {
-			return {
-
-			};
+			return {};
+		},
+		methods: {
+			// 跳转到详情页
+			toDetail(index) {
+				uni.navigateTo({
+					url: `/pages/detail/detail?id=${index}`
+				})
+			}
 		}
 	}
 </script>
@@ -47,7 +71,7 @@
 			display: flex;
 			flex-direction: column;
 			justify-content: space-between;
-			
+
 			.title {
 				font-size: 36rpx;
 				color: #333;
@@ -57,7 +81,8 @@
 			.info {
 				font-size: 26rpx;
 				color: #999;
-				text{
+
+				text {
 					padding-right: 20rpx;
 				}
 			}
