@@ -5,9 +5,13 @@
 			<text>浏览记录</text>
 		</view>
 		<view class="content">
-			<view class="row" v-for="item in 10">
-				<newsbox></newsbox>
+			<view class="row" v-for="item in historyList">
+				<newsbox :item="item"></newsbox>
 			</view>
+		</view>
+		<view class="noHistory" v-if="!historyList.length">
+			<image src="../../static/images/nohis.png" mode="widthFix"></image>
+			<view class="text">暂无浏览记录</view>
 		</view>
 	</view>
 </template>
@@ -16,8 +20,18 @@
 	export default {
 		data() {
 			return {
-
+				historyList: []
 			};
+		},
+		onShow() {
+			this.getHistory()
+		},
+		methods: {
+			// 获取缓存浏览记录
+			getHistory() {
+				let historyList = uni.getStorageSync("historyList") || [];
+				this.historyList = historyList;
+			},
 		}
 	}
 </script>
@@ -37,19 +51,35 @@
 				width: 150rpx;
 				height: 150rpx
 			}
-			
-			text{
+
+			text {
 				font-size: 38rpx;
 				padding-top: 20rpx;
 			}
 		}
-		
+
 		.content {
 			padding: 20rpx;
-		
+
 			.row {
 				border-bottom: 1px dashed #efefef;
 				padding: 15rpx 0;
+			}
+		}
+
+		.noHistory {
+			display: flex;
+			flex-direction: column;
+			justify-content: center;
+			align-items: center;
+
+			image {
+				width: 500rpx;
+			}
+			
+			.text{
+				font-size: 30rpx;
+				color:#888;
 			}
 		}
 	}

@@ -11,8 +11,16 @@
 				<newsbox :item="item"></newsbox>
 			</view>
 		</view>
-		<view class="nodata" v-if="newsList.length===0">
+		<view class="nodata" v-if="!newsList.length&&isLoading!==1">
 			<image src="../../static/images/nodata.png" mode="widthFix"></image>
+		</view>
+		<view class="loading" v-if="newsList.length">
+			<view v-if="isLoading === 1">
+				加载中...
+			</view>
+			<view v-if="isLoading === 2">
+				没有更多了
+			</view>
 		</view>
 	</view>
 </template>
@@ -23,11 +31,19 @@
 			return {
 				navIndex: 0,
 				navList: [],
-				newsList: []
+				newsList: [],
+				currentPage: 1,
+				isLoading: 0 // 0加载完成 1加载中 2没有更多了
 			}
 		},
 		onLoad() {
 			this.getNavList()
+			this.getNewsList()
+		},
+		// 触底加载新数据
+		onReachBottom() {
+			if (this.isLoading === 2) return
+			this.currentPage++
 			this.getNewsList()
 		},
 		methods: {
@@ -43,17 +59,28 @@
 			// 点击导航切换
 			clickNav(item, index) {
 				this.navIndex = index
+				this.currentPage = 1
+				this.newsList = []
+				this.isLoading = 0
 				this.getNewsList(item.id)
 			},
 			// 获取新闻列表
 			getNewsList(id = 50) {
+				this.isLoading = 1
 				uni.request({
 					url: 'https://ku.qingnian8.com/dataApi/news/newslist.php',
 					data: {
-						cid: id
+						cid: id,
+						mum: 8,
+						page: this.currentPage
 					},
 					success: res => {
-						this.newsList = res.data
+						if (res.data.length === 0) {
+							this.isLoading = 2
+						} else {
+							this.isLoading = 0
+						}
+						this.newsList = [...this.newsList, ...res.data]
 					}
 				})
 			}
@@ -104,6 +131,16 @@
 
 			image {
 				width: 360rpx;
+			}
+		}
+
+		.loading {
+			text-align: center;
+			font-size: 26rpx;
+			color: #888;
+
+			view {
+				padding: 10rpx 0;
 			}
 		}
 	}
