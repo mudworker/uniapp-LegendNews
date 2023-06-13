@@ -1,5 +1,5 @@
 {
-    "name" : "01.LegendNews",
+    "name" : "LegendNews",
     "appid" : "__UNI__A97E969",
     "description" : "",
     "versionName" : "1.0.0",
@@ -82,7 +82,7 @@
     "quickapp" : {},
     /* 小程序特有相关 */
     "mp-weixin" : {
-        "appid" : "",
+        "appid" : "wxc63776f79a963444",
         "setting" : {
             "urlCheck" : false
         },
